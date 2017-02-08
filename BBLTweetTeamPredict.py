@@ -24,6 +24,8 @@ BowlStat1 = 0
 BatStat1 = 0
 BowlStat2 = 0
 BatStat2 = 0
+BowlStat11 = 0
+BowlStat21 = 0
 Team1 = -1
 Team2 = -1
 
@@ -92,10 +94,12 @@ while count2 <11:
         if isinstance(bowlDF.loc[row1,'Ave'],str):
             try :
                 BowlStat1 += float(bowlDF.loc[row1,'Ave'])*float(bowlDF.loc[row1,'Econ'])
+                BowlStat11 += float(bowlDF.loc[row1,'Econ'])
             except:
                 bowlCount1 = bowlCount1
         else :
             BowlStat1 += float(bowlDF.loc[row1,'Ave'].values[0])*float(bowlDF.loc[row1,'Econ'].values[0])
+            BowlStat11 += float(bowlDF.loc[row1,'Econ'].values[0])
             print('Bowl Stats :')
             print(BowlStat1)
     if row1 in batDF.index:
@@ -116,11 +120,13 @@ while count2 <11:
         bowlCount2 += 1
         if isinstance(bowlDF.loc[row1,'Ave'],str):
             try :
-                BowlStat2 += float(bowlDF.loc[row1,'Ave'])*float(bowlDF.loc[row1,'Econ'])
+                BowlStat2 += float(bowlDF.loc[row1,'Econ'])*float(bowlDF.loc[row1,'Ave'])
+                BowlStat21 += float(bowlDF.loc[row1,'Econ'])
             except:
                 bowlCount2 = bowlCount2
         else :
             BowlStat2 += float(bowlDF.loc[row1,'Ave'].values[0])*float(bowlDF.loc[row1,'Econ'].values[0])
+            BowlStat21 += float(bowlDF.loc[row1,'Econ'].values[0])
             print('Bowl Stats :')
             print(BowlStat2)
     if row1 in batDF.index:
@@ -141,15 +147,31 @@ print(BatStat2)
 #print(BowlStat1 * BatStat2)
 Home = (45.5,38.1,50.0,66.67,40.91,62.5,46.45,18.18)
 Away = (57.14,52.17,43.48,64.0,52.38,60.87,53.55,31.82)
+Home2 = (Home[0]-Away[0],Home[1]-Away[1],Home[2]-Away[2],Home[3]-Away[3],Home[4]-Away[4],Home[5]-Away[5],Home[6]-Away[6],Home[7]-Away[7],)
 if Home[Team1] < Away[Team2]:
     adjust = (Away[Team2] - Home[Team1])/100 + 1
     result = (BowlStat2 * BatStat1)/(adjust) - (BowlStat1 * BatStat2*adjust)
 else :
     adjust = (Home[Team1] - Away[Team2])/100 + 1
     result = (BowlStat2 * BatStat1*adjust) - (BowlStat1 * BatStat2)/adjust
+result2 = (BowlStat2 * BatStat1*(Home2[Team1]/100 + 1))-(BowlStat1 * BatStat2*(-Home2[Team2]/100 + 1))
+result3 = BowlStat2 * BatStat1 - BowlStat1 * BatStat2
+result4 = (BowlStat21 * BatStat1*(Home2[Team1]/100 + 1))-(BowlStat11 * BatStat2*(-Home2[Team2]/100 + 1))
+result5 = (BatStat1*(Home2[Team1]/100 + 1))-(BatStat2*(-Home2[Team2]/100 + 1))
+result6 = ((BowlStat21 *(Home2[Team1]/100 + 1))-(BowlStat11 *(-Home2[Team2]/100 + 1)))
 ###enter in adjust part
 print('result is:  ')
 print(result)
+print('Other Algorithm (more accurate adjustment):  ')
+print(result2)
+print('No adjustment:  ')
+print(result3)
+print('Econ 1 : ')
+print(result4)
+print('Just Bat')
+print(result5)
+print('Just Econ: ')
+print(result6)
 print(playersPlaying1)
 print('Team Two')
 print(playersPlaying2)
